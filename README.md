@@ -10,19 +10,19 @@
 2. Tag the Docker image
   
    ```bash
-   docker tag <your-image-name>:latest <your-account-id.dkr.ecr.your-region.      amazonaws.com/your-repository-name>:latest
+   docker tag <your-image-name>:latest <your-ecr-repository-url>:latest
    ```
 
 3. Login to AWS ECR
 
    ```bash
-   aws ecr get-login-password --region <your-region> | docker login --username    AWS --password-stdin <your-account-id.dkr.ecr.your-region.amazonaws.com>
+   aws ecr get-login-password --region <your-region> | docker login --username    AWS --password-stdin <your-ecr-repository-url>
    ```
 
 4. Push the Docker image to AWS ECR
 
-  ```bash
-   docker push <your-account-id.dkr.ecr.your-region.amazonaws.com/your-           repository-name>:latest
+   ```bash
+   docker push <your-ecr-repository-url>:latest
    ```
 
 
