@@ -3,6 +3,9 @@ FROM python:3.8-slim
 
 WORKDIR /app
 
+RUN apt-get update -y \
+   && apt-get upgrade -y\
+
 
 COPY requirements.txt .
 
