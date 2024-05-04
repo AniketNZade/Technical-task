@@ -1,65 +1,56 @@
 import boto3
-import mysql-connector-python
+import mysql.connector
 
-def read_data_from_s3(deploy15, http://deploy15.s3-website.ap-south-1.amazonaws.com):
+def read_from_s3(bucket_name, file_name):
     s3 = boto3.client('s3')
-    response = s3.get_object(Bucket=deploy15, Key=http://deploy15.s3-website.ap-south-1.amazonaws.com)
-    data = response['Body'].read().decode('utf-8')
+    response = s3.get_object(Bucket=bucket_name, Key=file_name)
+    data = response['Body'].read()
     return data
 
-def push_to_rds(data):
+def push_to_rds(data, db_host, db_user, db_password, db_name):
     try:
-        connection = mysql.connector.connect(
-            host='database-1.c75jqxcklajk.ap-south-1.rds.amazonaws.com',
-            user='admin',
-            password='Password',
-            database='database-1'
+        conn = mysql.connector.connect(
+            host=db_host,
+            user=db_user,
+            password=db_password,
+            database=db_name
         )
-
-        cursor = connection.cursor()
-
-        query = "INSERT INTO your_table_name (column1, column2) VALUES (%s, %s)"
-
-        for row in data:
-            cursor.execute(query, row)
-
-        connection.commit()
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO your_table (data) VALUES (%s)", (data,))
+        conn.commit()
+        cursor.close()
+        conn.close()
         print("Data pushed to RDS successfully.")
-
+        return True
     except Exception as e:
-        print("Failed to push to RDS:", e)
+        print("Failed to push data to RDS:", e)
+        return False
 
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'connection' in locals() and connection.is_connected():
-            connection.close()
-
-# Example usage:
-data = [('value1', 'value2'), ('value3', 'value4')]  # Example data, replace it with your actual data
-push_to_rds(data)
-
-
-def push_to_glue(data):
-    
+def push_to_glue_database(data):
     try:
-        glue_client = boto3.client('glue')
-        database_name = 'Project'
-        glue_client.create_database(DatabaseInput={'Name': Project})
+            glue_client = boto3.client('glue')
+            glue_client.put_database_records(
+                DatabaseName=glue_database,
+                TableName="your_table",
+                Records=[{"record": data}]
+            )    
+            
         print("Glue Database created successfully.")
-
+        return True
     except Exception as e:
-        print("Failed to push to Glue Database:", e)
-
-# Example usage:
-data = [('value1', 'value2'), ('value3', 'value4')]  # Example data, replace it with your actual data
-push_to_glue(data)
- pass
+        print("Failed to push to Glue Database:", e)    
+        return False
+    
 
 if _name_ == "_main_":
-    data = read_data_from_s3('deploy15', 'http://deploy15.s3-website.ap-south-1.amazonaws.com')
-    try:
-        push_to_rds(data)
-    except Exception as e:
-        print("Failed to push to RDS:", e)
-        push_to_glue(data)
+    bucket_name = "your-s3-bucket"
+    file_name = "your-file.csv"
+    db_host = "your-rds-host"
+    db_user = "your-rds-username"
+    db_password = "your-rds-password"
+    db_name = "your-rds-database"
+
+    data = read_from_s3(bucket_name, file_name)
+
+    if not push_to_rds(data, db_host, db_user, db_password, db_name):
+        push_to_glue_database(data)
