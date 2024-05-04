@@ -1,4 +1,4 @@
-## Process of deploying on AWS ECR and testing on lambda 
+## Process of deploying Docker image on AWS ECR and testing on lambda 
 
 # Steps to push dockerfile to AWS ECR
 
@@ -10,20 +10,20 @@
 2. Tag the Docker image
   
    ```bash
-   docker tag <your-image-name>:latest <your-account-id.dkr.ecr.your-region.ama   zonaws.com/your-repository-name>:latest
+   docker tag <your-image-name>:latest <your-account-id.dkr.ecr.your-region.      amazonaws.com/your-repository-name>:latest
    ```
 
 3. Login to AWS ECR
 
-  ```bash
-  aws ecr get-login-password --region <your-region> | docker login --username A  WS --password-stdin <your-account-id.dkr.ecr.your-region.amazonaws.com>
-  ```
+   ```bash
+   aws ecr get-login-password --region <your-region> | docker login --username    AWS --password-stdin <your-account-id.dkr.ecr.your-region.amazonaws.com>
+   ```
 
 4. Push the Docker image to AWS ECR
 
   ```bash
-  docker push <your-account-id.dkr.ecr.your-region.amazonaws.com/your-repositor  y-name>:latest
-  ```
+   docker push <your-account-id.dkr.ecr.your-region.amazonaws.com/your-           repository-name>:latest
+   ```
 
 
 # Steps for testing image on lambda
@@ -42,5 +42,4 @@
 2. For testing the Lambda function
    
    ```bash
-   aws lambda invoke --function-name your-function-name --payload '{}' output.p   y
-   ```
+   aws lambda invoke --function-name your-function-name --payload '{}'output.py   ```
