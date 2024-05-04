@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage("Code"){
             steps{
-                git url: "https://github.com/AniketNZade/Technical-project.git", branch: "jenkins"
+                git url: "https://github.com/AniketNZade/Technical-task.git", branch: "jenkins"
             }
         }
         stage('Build Docker Image') {
