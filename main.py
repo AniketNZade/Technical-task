@@ -35,10 +35,10 @@ def push_to_glue_database(data):
                 Records=[{"record": data}]
             )    
             
-        print("Glue Database created successfully.")
+       print("Glue Database created successfully.")
         return True
     except Exception as e:
-        print("Failed to push to Glue Database:", e)    
+       print("Failed to push to Glue Database:", e)    
         return False
     
 
