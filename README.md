@@ -42,4 +42,5 @@
 2. For testing the Lambda function
    
    ```bash
-   aws lambda invoke --function-name your-function-name --payload '{}'output.py   ```
+   aws lambda invoke --function-name <your-function-name> --region <your-region> response.json
+   ```
